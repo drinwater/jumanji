@@ -135,6 +135,7 @@ class Connector(Environment[State, specs.MultiDiscreteArray, Observation]):
         super().__init__()
         self._agent_ids = jnp.arange(self.num_agents)
         self._viewer = viewer or ConnectorViewer("Connector", self.num_agents, render_mode="human")
+        self.first_reset = False
 
     def reset(self, key: chex.PRNGKey) -> Tuple[State, TimeStep[Observation]]:
         """Resets the environment.
@@ -146,7 +147,11 @@ class Connector(Environment[State, specs.MultiDiscreteArray, Observation]):
             state: `State` object corresponding to the new state of the environment.
             timestep: `TimeStep` object corresponding to the initial environment timestep.
         """
-        state = self._generator(key)
+        if not self.first_reset:
+            state = self._generator(key)
+            self.initial_state = state
+        else:
+            state = self.initial_state
 
         observation = Observation(
             grid=state.grid,
