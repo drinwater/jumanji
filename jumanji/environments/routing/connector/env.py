@@ -147,12 +147,13 @@ class Connector(Environment[State, specs.MultiDiscreteArray, Observation]):
             state: `State` object corresponding to the new state of the environment.
             timestep: `TimeStep` object corresponding to the initial environment timestep.
         """
-        if not self.first_reset:
-            state = self._generator(key)
-            self.initial_state = state
-        else:
-            state = self.initial_state
+        # if not self.first_reset:
+        #     state = self._generator(key)
+        #     self.initial_state = state
+        # else:
+        #     state = self.initial_state
 
+        state = self._generator(key)
         observation = Observation(
             grid=state.grid,
             action_mask=state.action_mask,
